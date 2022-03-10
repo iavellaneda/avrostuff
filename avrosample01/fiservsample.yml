@@ -1,0 +1,149 @@
+asyncapi: 2.0.0
+
+# ---
+
+id: 'urn:valley:fiserv-events-sample'
+
+# ---
+
+info:
+    title: Fiserv sample
+    version: 1.0.0
+    description: Notifi Events Topic Sample.
+    contact:
+        name: Ignacio Avellaneda
+        email: iavellaneda@valley.com
+
+# ---
+
+tags:
+    - name: demo
+      description: Sample specs
+
+
+# ---
+
+externalDocs:
+    description: More info about Notifi Events
+    url: https://dev.azure.com/ValleyBank/Product%20and%20Platform%20Engineering/_wiki/wikis/Community%20for%20Enablement/2159/Events-and-Messaging
+
+# ---
+
+servers:
+    localhost-kafka:
+        url: localhost:9092
+        protocol: kafka
+        protocolVersion: '1.0.0'
+        description: 'Kafka broker running in fast-data-dev docker image'
+    confluent-cloud:
+        url: 'pkc-epwny.eastus.azure.confluent.cloud:9092'
+        protocol: kafka
+        protocolVersion: '2.6.0'
+        description: 'Kafka broker running on Confluent Cloud'
+
+# ---
+
+channels:
+    DepChg.AcctRec:
+        description: A Deposit Change Event is published when information changes about a Deposit Account
+        subscribe:
+            operationId: consumeAcctRec
+            message:
+                $ref: './acctrec.yml'
+
+    DepChg.Hold:
+        description: A hold of funds added or deleted from a Deposit account
+        subscribe:
+            operationId: consumeAcctHold
+            message:
+                name: Hold
+                contentType: avro/binary
+                schemaFormat: 'application/vnd.apache.avro+json;version=1.9.0'
+                payload:
+                    $ref: './hold-schema.avsc#/Hold'
+                examples:
+                    - payload: |
+                        {"Action": "New", "AvailBalAmt": 550.22, "HoldAmt": 200}
+
+
+components:
+    schemas:
+        headerPayload:
+            type: object
+            properties:
+                Version:
+                    description: Identifies the version of the Event Message Standard
+                    type: string
+                    length: 12
+                MsgEventId:
+                    description: Unique identifier provided by the Service Provider for every single event message
+                    type: string
+                    format: uuid
+                EventType:
+                    description: Identifies the category of the event
+                    type: string
+                EventCode:
+                    description: Further classifies the EventType
+                    type: string
+                PublisherId:
+                    description: Publisher Identifier assigned by the ESF after the process of enrollment of a publisher in the ESF event catalog
+                    type: string
+                    length: 36
+                EventDt:
+                    description: Date and time the event ocurred on the system
+                    type: string
+                    format: date-time
+                PartyId:
+                    description: Used as a database key to uniquely identify a party record
+                    type: string
+                    length: 20
+                AcctId:
+                    description: Used as a database key to uniquely identify account record
+                    type: string
+                    length: 20
+                AcctType:
+                    description: Identifies the type of account
+                    type: string
+                    enum:
+                        - DDA
+                        - SDA
+                        - CDA
+                        - CRD
+                        - MMA
+                        - DDL
+                        - HSA
+                        - RET
+                        - ILA
+                        - LIP
+                        - MLA
+                        - CLA
+                        - LOAN
+                        - SDB
+                        - CCA
+                        - EQU
+                        - GLA
+                        - AdultCashISA
+                        - IRA
+                        - EXT
+                        - JuniorCashISA
+                        - PBA
+                        - PORT
+                ProfileId:
+                    description: Identifier of the Profile name processing the event. Could be a User Id or IP address
+                    type: string
+                    length: 10
+                Branch:
+                    description: dentifies the branch that originated the event
+                    type: string
+                    length: 4
+                Profile:
+                    description: Profile name processing the event
+                    type: string
+                    length: 10
+                FullName:
+                    description: |-
+                        Name opf the party or customer consisting of:
+                        1. Optional Person Name Prefix
+                        2. Required Person First, Middle, Last Name or Organization Name
+                        3. Optional Person Name Suffix
+

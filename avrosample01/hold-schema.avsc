@@ -1,0 +1,24 @@
+{
+    "namespace": "microcks.avro",
+    "type": "record",
+    "name": "Hold",
+    "fields": [
+        {
+            "name": "Action",
+            "type": "enum",
+            "symbols": [
+                "New",
+                "Upd",
+                "Del"
+            ]
+        },
+        {
+            "name": "AvailBailAmt",
+            "type": "float"
+        },
+        {
+            "name": "HoldAmt",
+            "type": "float"
+        }
+    ]
+}

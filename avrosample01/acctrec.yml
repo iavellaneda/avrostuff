@@ -1,0 +1,48 @@
+name: AcctRec
+contentType: 'application/json'
+payload:
+    type: object
+    required:
+        - id
+        - MsgEventId
+        - EventType
+        - EventCode
+        - EventDt
+    properties:
+        header:
+            $ref: '#/components/schemas/headerPayload'
+        Action:
+            description: Type of Change Action
+            type: string
+            enum:
+                - New
+                - Upd
+                - Del
+        AccrualRecurType:
+            description: Interest accrual recurrence frecuency
+            type: string
+            enum:
+                - Daily
+                - Weekly
+                - Montly
+                - Once
+                - SemiMonthly
+                - SvcChgCycle
+                - Yearly
+                - Cycle
+                - Maturity
+                - Quarterly
+                - SemiYearly
+                - InterestCycle
+                - TwiceMonthly
+                - None
+                - PayOff
+                - Anniversary
+                - PmtRecalculation
+                - CycleAndQuarterly
+        CombineSmtInd:
+            description: Indicates whether the account is part of a combined statement
+            type: boolean
+examples:
+    - payload: |
+        {"id": "1111","Version": "123456789012","MsgEventId": "ee280c43-500f-46bb-87b2-c399dd94e4eb","EventType": "DepChg","EventCode": "AcctRec","PublisherId": "PUB1234786576","EventDt": "2020-01-22T11:11:11","PartyId": "PRTY32323","AcctId": "ACCT92834","AcctType": "DDA","ProfileId": "Profile10","Branch": "C1234","Profile": "1234567890","FullName": "John Doe","Action": "Upd","AccrualRecurType": "Daily","CombineStmtInd": "true"}
