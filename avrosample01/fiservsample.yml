@@ -49,7 +49,10 @@ channels:
         subscribe:
             operationId: consumeAcctRec
             message:
-                $ref: './acctrec.yml'
+                schemaFormat: application/vnd.aai.asyncapi;version=2.0.0,
+                contentType: application/json
+                message:
+                    $ref: './acctrec.yml#/AcctRec'
 
     DepChg.Hold:
         description: A hold of funds added or deleted from a Deposit account
@@ -64,6 +67,27 @@ channels:
                 examples:
                     - payload: |
                         {"Action": "New", "AvailBalAmt": 550.22, "HoldAmt": 200}
+
+    DepChg.StatusChg:
+        description: An status change
+        suscribe:
+            operationId: consumeStatusChg
+            message:
+                name: StatusChg
+                payload:
+                    type: object
+                    properties:
+                        Action:
+                            description: Type of Change Action
+                            type: string
+                            enum:
+                                - New
+                                - Upd
+                                - Del
+                        AcctDtlStatus:
+                            description: Account Detail Status
+                            type: string
+
 
 
 components:
