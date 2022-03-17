@@ -172,57 +172,6 @@ channels:
         $ref: '#/components/messages/stockTransferEvent'
 
 
-  TEMPERATURE:
-    description: Temperature sensor readings from all warehouses
-    publish:
-      operationId: produceTemperature
-      bindings:
-        kafka:
-          clientId:
-            type: string
-            pattern: '^[a-z]{22}$'
-      message:
-        name: temperatureReading
-        title: Temperature sensor reading
-        summary: Sensor readings from IoT platform in all warehouses
-        tags:
-          - name: central
-            description: Events relating to the central warehouse
-          - name: east
-            description: Events relating to the East warehouse
-          - name: west
-            description: Events relating to the West warehouse
-        bindings:
-          kafka:
-            key:
-              type: string
-              enum:
-               - central
-               - east
-               - west
-        headers:
-          type: object
-          properties:
-            sensortype:
-              description: IoT sensor type code
-              type: string
-            acmecode:
-              type: integer
-              minimum: 1
-              maximum: 9
-        schemaFormat: 'application/vnd.apache.avro;version=1.9.0'
-        contentType: 'application/octet-stream'
-        payload:
-          $ref: 'https://gist.githubusercontent.com/dalelane/8b0ddf174e7f5186a7e4407c6f289346/raw/1a7018afcf46599a2529c2eef762b8f88672521c/temperature.avsc'
-        examples:
-          - headers:
-              sensortype: 'rpibd'
-              acmecode: 7
-            payload:
-              warehouse: CENTRAL
-              sensorid: abcd1234
-              temp: 14.3
-
 # ---
 
 components:
